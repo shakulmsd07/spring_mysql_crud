@@ -1,0 +1,26 @@
+version: '3'
+services:
+         mysql:
+             image: mysql             #-->  creating mysql image 
+             container_name: mysqldb  # --> container name , creating container from mysql image
+             environment:
+                      MYSQL_ROOT_PASSWORD: shakul         # configure credential same as spring app properties
+                      MYSQL_DATABASE: Employee_Db
+                      MYSQL_USER: shakul
+                      MYSQL_PASSWORD: 1234
+             volumes:
+                      - mysql-data:/var/lib/mysql        # volume stored in mysql-data through this directory /var/lib/mysql 
+
+         spring-app:
+              image: new_springapp                       # creating spring image using docker build
+              container_name: spring_new_container       # container name,creating container from spring image
+              ports:
+                 - "8080:8080"                           # Export port of spring
+              depends_on:
+                 - mysql                                 # start from mysql service and then spring-app
+              environment:
+                   SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/Employee_Db        # mysqldb -->  mysql container   ,Employee_Db -->database name
+                   SPRING_DATASOURCE_USERNAME: shakul
+                   SPRING_DATASOURCE_PASSWORD: 1234
+volumes:
+         mysql-data:
